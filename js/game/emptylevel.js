@@ -2,6 +2,7 @@ function EmptyLevel(){
 }
 
 EmptyLevel.prototype.preload = function() {
+   
 }
     
 EmptyLevel.prototype.create = function() {
