@@ -22,3 +22,15 @@ FiniteStateMachine.prototype.changeState = function (newState){
 	this.currentState = newState;
 	this.currentState.onEnter();
 }
+
+FiniteStateMachine.prototype.switchToPreviousState = function(){
+    if(this.previousState){
+        this.changeState(this.previousState);
+    }
+}
+
+FiniteStateMachine.prototype.switchToNextState = function(){
+    if(this.nextState){
+        this.changeState(this.nextState);
+    }
+}
