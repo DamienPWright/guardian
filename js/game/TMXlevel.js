@@ -29,11 +29,14 @@ TmxLevel.prototype.preload = function() {
 }
 
 TmxLevel.prototype.create = function() {
-    this.spaceBar =  game.input.keyboard.addKey(13);
-    
     
    scoreText = game.add.text(16, 16, 'Level 1', {fontSize: '32px', fill: '#FFF'});
+   
+   //Physics
    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.gravity.y = 250;
+    
+    
    game.stage.backgroundColor = "#000000";
    this.map = game.add.tilemap('circuitboard');
    this.map.addTilesetImage( 'webgametiles', 'circuitboard_tiles');
@@ -51,33 +54,33 @@ TmxLevel.prototype.create = function() {
     
    //make player
    playerchar = new Player(0,0);
-   //player = game.add.sprite(0,0,'playerchar');
    player = game.add.existing(playerchar)
-   //game.physics.arcade.enable(player);
-   //player.body.bounce.y = 0;
-   //player.body.linearDamping = 1;
-   game.physics.arcade.gravity.y = 250;
-   //player.body.collideWorldBounds = true;
    this.p = player;
    game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
+   
+  
+   
     //controls
     this.cursors = game.input.keyboard.createCursorKeys();
+    this.spaceBar =  game.input.keyboard.addKey(32);
 };
 
 TmxLevel.prototype.update = function() {
     game.physics.arcade.collide(this.p, this.wall_layer);
     game.physics.arcade.collide(this.enemies, this.wall_layer);
-   
     //this.processPlayer();
+    
+    game.physics.arcade.overlap(this.hitboxes_friendly, this.enemies, this.onFriendlyOverlapWithEnemy);
+    game.physics.arcade.overlap(this.hitboxes_unfriendly, this.p, this.onUnfriendlyOverlapWithPlayer);
 };
 
 TmxLevel.prototype.render = function(){
-     //debug
+     //debug - due to the scaling it has to be done before pixel.context.drawImage or else it will be drawn underneath!
     this.hitboxes_friendly.forEachExists(this.renderGroup, this, 0);
     this.hitboxes_unfriendly.forEachExists(this.renderGroup, this, 1);
     this.hitboxes_seek.forEachExists(this.renderGroup, this, 2);
-   pixel.context.drawImage(game.canvas, 0, 0, game.width, game.height, 0, 0, pixel.width, pixel.height);
-   
+    
+    pixel.context.drawImage(game.canvas, 0, 0, game.width, game.height, 0, 0, pixel.width, pixel.height);
 };
 
 TmxLevel.prototype.debug = function(){
@@ -146,3 +149,22 @@ TmxLevel.prototype.createHitBox = function(X, Y, W, H, friendly, lifespan, seek)
     }
     return spr;
 };
+
+TmxLevel.prototype.onHitboxOverlapSprite = function(hb, spr){
+    if(hb.friendly){
+       console.log("enemy was hit!"); 
+    }else if(!hb.friendly){
+       console.log("player was hit!");
+    }
+    hb.destroy();
+}
+
+TmxLevel.prototype.onFriendlyOverlapWithEnemy = function(hb, ene){
+    console.log("enemy was hit!");
+    hb.destroy();
+}
+
+TmxLevel.prototype.onUnfriendlyOverlapWithPlayer = function(plyr, hb){
+    console.log("player was hit!")
+    hb.destroy();
+}

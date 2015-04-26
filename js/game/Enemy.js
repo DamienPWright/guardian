@@ -12,7 +12,12 @@ function Enemy(X, Y){
 
     this.seekBoxSize = {w: 50, h: 20};
     this.seekBox = game.state.getCurrentState().createHitBox(this.x, this.y, this.seekBoxSize.w, this.seekBoxSize.h, false, 0, true);
+    
+    this.dir = 0; // 0 for left, 1 for right.
+    this.prevdir = 1;
+    //=====
     //States
+    //=====
     //Idle state
     this.state_Idle = new ActorState(this);
     this.state_Idle.onEnter = function(){
@@ -25,40 +30,52 @@ function Enemy(X, Y){
         this.idleCount++;
         if(this.idleCount > this.idleTimer){
             this.fsm.changeState(this.actor.state_Wander);
-           
+        }
+        
+        if(this.actor.dir == 1){
+            //console.log(this.actor.checkSeekBox('right', player));
+            if(this.actor.checkSeekBox('right', player)){
+                console.log("detected right");
+                this.fsm.changeState(this.actor.state_Persue);
+            };
+        }else{
+            if(this.actor.checkSeekBox('left', player)){
+                console.log("detected left");
+                this.fsm.changeState(this.actor.state_Persue);
+            };
         }
     }
+    
     //Wander state
     this.state_Wander = new ActorState(this);
     this.state_Wander.onEnter = function(){
        //this.dir = Math.round(Math.random() * 1);
-       this.prevdir;
-       if(!this.prevdir){
-           this.dir = 1;
+       if(this.actor.prevdir == 1){
+           this.actor.dir = 0;
+       }else{
+           this.actor.dir = 1;
        }
        this.wanderTimer = 50;
        this.wanderCount = 0;
     }
     this.state_Wander.onExit = function(){
         this.actor.body.velocity.x = 0;
-        this.prevdir = this.dir;
-        if(this.dir == 1){
-           this.dir = 0;
-        }else{
-           this.dir = 1;
-        }
+        this.prevdir = this.actor.dir;
+        this.actor.prevdir = this.actor.dir;
     }
     this.state_Wander.update = function(){
         this.wanderCount++;
-        if(this.dir == 1){
+        if(this.actor.dir == 1){
             this.actor.body.velocity.x = 55;
             if(this.actor.checkSeekBox('right', player)){
                 console.log("detected right");
+                this.fsm.changeState(this.actor.state_Persue);
             };
         }else{
             this.actor.body.velocity.x = -55;
             if(this.actor.checkSeekBox('left', player)){
                 console.log("detected left");
+                this.fsm.changeState(this.actor.state_Persue);
             };
         }
         
@@ -67,6 +84,53 @@ function Enemy(X, Y){
         }
     }
     
+    //persue state
+    this.state_Persue = new ActorState(this);
+    this.state_Persue.onEnter = function(){
+        this.persueTime = 120;
+        this.persueCount = 0;
+    }
+    
+    this.state_Persue.onExit = function(){
+        this.persueCount = 0;
+    }
+    
+    this.state_Persue.update = function(){
+        this.persueCount++;
+        
+        if(this.actor.dir == 1){
+            if(this.actor.checkSeekBox('right', player)){
+                this.persueCount = 0;
+            };
+        }else{
+            if(this.actor.checkSeekBox('left', player)){
+                this.persueCount = 0;
+            };
+        }
+        
+        if(this.persueCount >= this.persueTime){
+           this.fsm.changeState(this.actor.state_Idle);
+        }
+        
+        if(player.x > this.actor.x){
+            this.actor.body.velocity.x = 65;
+        }
+        if(player.x < this.actor.x){
+            this.actor.body.velocity.x = -65;
+        }
+    }
+   
+   //attack state
+   this.state_Attack = new ActorState(this);
+   this.state_Attack.onEnter = function(){
+       
+   }
+   this.state_Attack.onExit = function(){
+       
+   }
+   this.state_Attack.onEnter = function(){
+       
+   }
     //set initial state
     this.fsm.changeState(this.state_Idle);
 }
