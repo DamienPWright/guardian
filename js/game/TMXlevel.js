@@ -6,7 +6,8 @@ function TmxLevel(){
    this.bkg_layer;
   
    this.cursors;
-    
+   this.spaceBar;
+   
     //actors and groups
     this.p;
     this.enemies;
@@ -15,6 +16,7 @@ function TmxLevel(){
     this.hitboxes_unfriendly;
     this.hitboxes_seek;
     this.items;
+    
 }
 
 TmxLevel.prototype.preload = function() {
@@ -27,6 +29,9 @@ TmxLevel.prototype.preload = function() {
 }
 
 TmxLevel.prototype.create = function() {
+    this.spaceBar =  game.input.keyboard.addKey(13);
+    
+    
    scoreText = game.add.text(16, 16, 'Level 1', {fontSize: '32px', fill: '#FFF'});
    game.physics.startSystem(Phaser.Physics.ARCADE);
    game.stage.backgroundColor = "#000000";
@@ -45,12 +50,14 @@ TmxLevel.prototype.create = function() {
     this.hitboxes_seek = game.add.group();
     
    //make player
-   player = game.add.sprite(0,0,'playerchar');
-   game.physics.arcade.enable(player);
-   player.body.bounce.y = 0;
-   player.body.linearDamping = 1;
+   playerchar = new Player(0,0);
+   //player = game.add.sprite(0,0,'playerchar');
+   player = game.add.existing(playerchar)
+   //game.physics.arcade.enable(player);
+   //player.body.bounce.y = 0;
+   //player.body.linearDamping = 1;
    game.physics.arcade.gravity.y = 250;
-   player.body.collideWorldBounds = true;
+   //player.body.collideWorldBounds = true;
    this.p = player;
    game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
     //controls
@@ -61,7 +68,7 @@ TmxLevel.prototype.update = function() {
     game.physics.arcade.collide(this.p, this.wall_layer);
     game.physics.arcade.collide(this.enemies, this.wall_layer);
    
-    this.processPlayer();
+    //this.processPlayer();
 };
 
 TmxLevel.prototype.render = function(){
@@ -109,6 +116,10 @@ TmxLevel.prototype.processPlayer = function(){
     else if (this.cursors.right.isDown)
     {
         this.p.body.velocity.x = 75;
+    }
+    
+    //attack
+    if(this.spaceBar.isDown){
     }
 };
 
