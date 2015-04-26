@@ -6,7 +6,6 @@ function HitBox(game, X, Y, key, friendly, lifespan){
     //this.height = H;
     this.friendly = friendly;
     this.lifespan = lifespan;
-    this.destroyed = false;
 }
 
 //  Here is a custom game object
@@ -19,11 +18,11 @@ HitBox.prototype.update = function(){
 };
 
 function ExtendHitBox(game, X, Y){
-    HitBox.call(this, game, X, Y, 'enemytest', true, 1000);
+    HitBox.call(this, game, X, Y, 'blanksprite', true, 1000);
 }
 
-ExtendHitBox.prototype = Object.create(HitBox.prototype);
-ExtendHitBox.prototype.constructor = ExtendHitBox;
-console.log("test");    
+//ExtendHitBox.prototype = Object.create(HitBox.prototype);
+//ExtendHitBox.prototype.constructor = ExtendHitBox;
+//console.log("test");    
 //test = new HitBox(50, 50, 50, 50, true, 600);
 //console.log(test);

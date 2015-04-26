@@ -13,6 +13,7 @@ function TmxLevel(){
     this.bullets;
     this.hitboxes_friendly;
     this.hitboxes_unfriendly;
+    this.hitboxes_seek;
     this.items;
 }
 
@@ -22,6 +23,7 @@ TmxLevel.prototype.preload = function() {
    //sprite images
    game.load.spritesheet('playerchar', 'assets/img/sprites/player.png', 14, 16);
    game.load.spritesheet('enemytest', 'assets/img/sprites/enemytest.png', 12, 16);
+   game.load.spritesheet('blanksprite', 'assets/img/sprites/blanksprite.png', 1, 1);
 }
 
 TmxLevel.prototype.create = function() {
@@ -40,6 +42,7 @@ TmxLevel.prototype.create = function() {
     this.enemies = game.add.group();
     this.hitboxes_unfriendly = game.add.group();
     this.hitboxes_friendly = game.add.group();
+    this.hitboxes_seek = game.add.group();
     
    //make player
    player = game.add.sprite(0,0,'playerchar');
@@ -62,8 +65,32 @@ TmxLevel.prototype.update = function() {
 };
 
 TmxLevel.prototype.render = function(){
-    pixel.context.drawImage(game.canvas, 0, 0, game.width, game.height, 0, 0, pixel.width, pixel.height);
+     //debug
+    this.hitboxes_friendly.forEachExists(this.renderGroup, this, 0);
+    this.hitboxes_unfriendly.forEachExists(this.renderGroup, this, 1);
+    this.hitboxes_seek.forEachExists(this.renderGroup, this, 2);
+   pixel.context.drawImage(game.canvas, 0, 0, game.width, game.height, 0, 0, pixel.width, pixel.height);
+   
 };
+
+TmxLevel.prototype.debug = function(){
+    
+}
+
+TmxLevel.prototype.renderGroup = function(member, n){
+    switch(n){
+        case 0:
+            game.debug.body(member, 'rgba(0,255,0,0.4)');
+            break;
+        case 1:
+            game.debug.body(member, 'rgba(255,0,0,0.4)');
+            break;
+        case 2:
+            game.debug.body(member, 'rgba(0,200,200,0.4)');
+            break;
+    }
+   
+}
 
 TmxLevel.prototype.processPlayer = function(){
     this.p.body.velocity.x = 0;
@@ -85,13 +112,26 @@ TmxLevel.prototype.processPlayer = function(){
     }
 };
 
-TmxLevel.prototype.createHitBox = function(X, Y, key, friendly, lifespan){
-    var spr = game.add.sprite(X, Y, key);
+TmxLevel.prototype.createHitBox = function(X, Y, W, H, friendly, lifespan, seek){
+    var spr = game.add.sprite(X, Y, 'blanksprite');
+    game.physics.enable(spr, Phaser.Physics.ARCADE);
+    spr.body.immovable = true;
+    spr.body.allowGravity = false;
+    spr.width = W;
+    spr.height = H;
     spr.lifespan = lifespan;
+    //spr.body.setSize(W, H, 0, 0);
+    spr.renderable = false;
+    //spr.visible = false;
+    if(seek){
+        this.hitboxes_seek.add(spr);
+        return spr;
+    }
     if(friendly){
         this.hitboxes_friendly.add(spr);
         console.log("added?")
     }else{
         this.hitboxes_unfriendly.add(spr);
     }
+    return spr;
 };
