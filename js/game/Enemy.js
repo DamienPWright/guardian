@@ -1,5 +1,6 @@
 function Enemy(X, Y){
-    Phaser.Sprite.call(this, game, X, Y, 'enemytest');
+    Actor.call(this, X, Y, 'enemytest');
+    //Phaser.Sprite.call(this, game, X, Y, 'enemytest');
     //this.x = X;
     //this.y = Y;
     //this.width = W;
@@ -150,8 +151,8 @@ function Enemy(X, Y){
             }else{
                 hbx = this.actor.x + 12;
             }
-            hby = this.actor.y + (this.actor.height / 2) - 8;
-           game.state.getCurrentState().createHitBox(hbx, hby, 16, 16, false, 50);
+            hby = this.actor.y + (this.actor.height / 2) - 4;
+           game.state.getCurrentState().createHitBox(hbx, hby, 16, 8, false, 50);
             console.log("attacked. " + hbx + " " + hby);
        }
        if(this.postAttackCount >= (this.attackTimer + this.postAttackTimer)){
@@ -163,10 +164,11 @@ function Enemy(X, Y){
     this.fsm.changeState(this.state_Idle);
 }
 
-Enemy.prototype = Object.create(Phaser.Sprite.prototype);
+Enemy.prototype = Object.create(Actor.prototype);
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function(){
+    this.updateActor();
     this.fsm.update();
 };
 

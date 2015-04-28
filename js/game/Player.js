@@ -1,5 +1,5 @@
 function Player(X, Y){
-    Phaser.Sprite.call(this, game, X, Y, 'playerchar');
+    Actor.call(this, X, Y, 'playerchar');
     game.physics.arcade.enable(this);
     this.body.bounce.y = 0;
     this.body.linearDamping = 1;
@@ -14,10 +14,11 @@ function Player(X, Y){
     game.input.keyboard.addKey(32).onDown.add(function(){this.attack()}, this);
 }
 
-Player.prototype = Object.create(Phaser.Sprite.prototype);
+Player.prototype = Object.create(Actor.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function(){
+    this.updateActor();
     this.processControls();
 }
 

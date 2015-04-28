@@ -26,7 +26,7 @@ TmxLevel.prototype.preload = function() {
    game.load.spritesheet('playerchar', 'assets/img/sprites/player.png', 14, 16);
    game.load.spritesheet('enemytest', 'assets/img/sprites/enemytest.png', 12, 16);
    game.load.spritesheet('blanksprite', 'assets/img/sprites/blanksprite.png', 1, 1);
-}
+};
 
 TmxLevel.prototype.create = function() {
     
@@ -42,7 +42,7 @@ TmxLevel.prototype.create = function() {
    this.map.addTilesetImage( 'webgametiles', 'circuitboard_tiles');
    this.bkg_layer = this.map.createLayer('bkg');
    this.wall_layer = this.map.createLayer('wall');
-   this.map.setCollisionByExclusion([0], true, this.wall_layer)
+   this.map.setCollisionByExclusion([0], true, this.wall_layer);
    this.wall_layer.resizeWorld();
   
    init();
@@ -86,7 +86,7 @@ TmxLevel.prototype.render = function(){
 
 TmxLevel.prototype.debug = function(){
     
-}
+};
 
 TmxLevel.prototype.renderGroup = function(member, n){
     switch(n){
@@ -101,7 +101,7 @@ TmxLevel.prototype.renderGroup = function(member, n){
             break;
     }
    
-}
+};
 
 TmxLevel.prototype.createObjectsFromMap = function(){
     var objs = this.map.objects.objects;
@@ -207,12 +207,14 @@ TmxLevel.prototype.onHitboxOverlapSprite = function(hb, spr){
 }
 
 TmxLevel.prototype.onFriendlyOverlapWithEnemy = function(hb, ene){
-    console.log("enemy was hit!");
+    console.log("enemy was hit! " + ene);
     hb.destroy();
+    ene.blinking = true;
 }
 
 TmxLevel.prototype.onUnfriendlyOverlapWithPlayer = function(plyr, hb){
     console.log("player was hit!")
     hb.destroy();
+    player.blinking = true;
 }
 
