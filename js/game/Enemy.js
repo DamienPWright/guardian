@@ -12,6 +12,8 @@ function Enemy(X, Y){
 
     this.seekBoxSize = {w: 50, h: 20};
     this.seekBox = game.state.getCurrentState().createHitBox(this.x, this.y, this.seekBoxSize.w, this.seekBoxSize.h, false, 0, true);
+    this.attackBoxSize = {w: 32, h: 20}; // A seek box used to trigger the attack state
+    this.attackBox = game.state.getCurrentState().createHitBox(this.x, this.y, this.attackBoxSize.w, this.attackBoxSize.h, false, 0, true);
     
     this.dir = 0; // 0 for left, 1 for right.
     this.prevdir = 1;
@@ -23,9 +25,9 @@ function Enemy(X, Y){
     this.state_Idle.onEnter = function(){
        this.idleTimer = 50;
        this.idleCount = 0;
-    }
+    };
     this.state_Idle.onExit = function(){
-    }
+    };
     this.state_Idle.update = function(){
         this.idleCount++;
         if(this.idleCount > this.idleTimer){
@@ -37,14 +39,14 @@ function Enemy(X, Y){
             if(this.actor.checkSeekBox('right', player)){
                 console.log("detected right");
                 this.fsm.changeState(this.actor.state_Persue);
-            };
+            }
         }else{
             if(this.actor.checkSeekBox('left', player)){
                 console.log("detected left");
                 this.fsm.changeState(this.actor.state_Persue);
-            };
+            }
         }
-    }
+    };
     
     //Wander state
     this.state_Wander = new ActorState(this);
@@ -57,12 +59,12 @@ function Enemy(X, Y){
        }
        this.wanderTimer = 50;
        this.wanderCount = 0;
-    }
+    };
     this.state_Wander.onExit = function(){
         this.actor.body.velocity.x = 0;
         this.prevdir = this.actor.dir;
         this.actor.prevdir = this.actor.dir;
-    }
+    };
     this.state_Wander.update = function(){
         this.wanderCount++;
         if(this.actor.dir == 1){
@@ -70,30 +72,30 @@ function Enemy(X, Y){
             if(this.actor.checkSeekBox('right', player)){
                 console.log("detected right");
                 this.fsm.changeState(this.actor.state_Persue);
-            };
+            }
         }else{
             this.actor.body.velocity.x = -55;
             if(this.actor.checkSeekBox('left', player)){
                 console.log("detected left");
                 this.fsm.changeState(this.actor.state_Persue);
-            };
+            }
         }
         
         if(this.wanderCount > this.wanderTimer){
             this.fsm.changeState(this.actor.state_Idle);
         }
-    }
+    };
     
     //persue state
     this.state_Persue = new ActorState(this);
     this.state_Persue.onEnter = function(){
         this.persueTime = 120;
         this.persueCount = 0;
-    }
+    };
     
     this.state_Persue.onExit = function(){
         this.persueCount = 0;
-    }
+    };
     
     this.state_Persue.update = function(){
         this.persueCount++;
@@ -101,36 +103,62 @@ function Enemy(X, Y){
         if(this.actor.dir == 1){
             if(this.actor.checkSeekBox('right', player)){
                 this.persueCount = 0;
-            };
+            }
         }else{
             if(this.actor.checkSeekBox('left', player)){
                 this.persueCount = 0;
-            };
+            }
         }
-        
+        if(this.actor.checkAttackBox(player)){
+            this.fsm.changeState(this.actor.state_Attack)
+        };
         if(this.persueCount >= this.persueTime){
            this.fsm.changeState(this.actor.state_Idle);
         }
         
         if(player.x > this.actor.x){
             this.actor.body.velocity.x = 65;
+             this.actor.dir = 1;
         }
         if(player.x < this.actor.x){
             this.actor.body.velocity.x = -65;
+             this.actor.dir = 0;
         }
-    }
+    };
    
    //attack state
    this.state_Attack = new ActorState(this);
    this.state_Attack.onEnter = function(){
-       
-   }
+       this.attackTimer = 30;
+       this.attackCount = 0;
+       this.postAttackTimer = 30;
+       this.postAttackCount = 0;
+       this.actor.body.velocity.x = 0;
+   };
    this.state_Attack.onExit = function(){
-       
-   }
-   this.state_Attack.onEnter = function(){
-       
-   }
+       this.attackCount = 0;
+   };
+   this.state_Attack.update = function(){
+       this.attackCount++;
+       this.postAttackCount++;
+       this.actor.body.velocity.x = 0;
+       if(this.attackCount == this.attackTimer){
+            var hbx;
+            var hby;
+            if(this.actor.dir == 0){
+                hbx = this.actor.x - 12;
+            }else{
+                hbx = this.actor.x + 12;
+            }
+            hby = this.actor.y + (this.actor.height / 2) - 8;
+           game.state.getCurrentState().createHitBox(hbx, hby, 16, 16, false, 50);
+            console.log("attacked. " + hbx + " " + hby);
+       }
+       if(this.postAttackCount >= (this.attackTimer + this.postAttackTimer)){
+           this.fsm.changeState(this.actor.state_Persue);
+           console.log("attack finished");
+       }
+   };
     //set initial state
     this.fsm.changeState(this.state_Idle);
 }
@@ -140,7 +168,7 @@ Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function(){
     this.fsm.update();
-}
+};
 
 Enemy.prototype.checkSeekBox = function(posKey, target){
     var detected = false;
@@ -158,9 +186,21 @@ Enemy.prototype.checkSeekBox = function(posKey, target){
             this.seekBox.y = this.y + (this.height / 2) - (this.seekBoxSize.h / 2);
             break;
     }
-    if(this.seekBox.overlap(player)){
+    if(this.seekBox.overlap(target)){
         detected = true;
     }
     return detected;
-}
+};
+
+Enemy.prototype.checkAttackBox = function (target){
+    var detected = false;
+    this.attackBox.x = this.x + (this.width / 2) - (this.attackBoxSize.w / 2);
+    this.attackBox.y = this.y + (this.height / 2) - (this.attackBoxSize.h / 2);
+    if(this.attackBox.overlap(target)){
+        detected = true;
+    }
+    return detected;
+};
+
+
 

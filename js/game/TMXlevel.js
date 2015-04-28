@@ -58,7 +58,8 @@ TmxLevel.prototype.create = function() {
    this.p = player;
    game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
    
-  
+   //load objects from the map
+   this.createObjectsFromMap();
    
     //controls
     this.cursors = game.input.keyboard.createCursorKeys();
@@ -67,8 +68,8 @@ TmxLevel.prototype.create = function() {
 
 TmxLevel.prototype.update = function() {
     game.physics.arcade.collide(this.p, this.wall_layer);
+    game.physics.arcade.collide(this.p, this.enemies);
     game.physics.arcade.collide(this.enemies, this.wall_layer);
-    //this.processPlayer();
     
     game.physics.arcade.overlap(this.hitboxes_friendly, this.enemies, this.onFriendlyOverlapWithEnemy);
     game.physics.arcade.overlap(this.hitboxes_unfriendly, this.p, this.onUnfriendlyOverlapWithPlayer);
@@ -78,7 +79,7 @@ TmxLevel.prototype.render = function(){
      //debug - due to the scaling it has to be done before pixel.context.drawImage or else it will be drawn underneath!
     this.hitboxes_friendly.forEachExists(this.renderGroup, this, 0);
     this.hitboxes_unfriendly.forEachExists(this.renderGroup, this, 1);
-    this.hitboxes_seek.forEachExists(this.renderGroup, this, 2);
+    //this.hitboxes_seek.forEachExists(this.renderGroup, this, 2);
     
     pixel.context.drawImage(game.canvas, 0, 0, game.width, game.height, 0, 0, pixel.width, pixel.height);
 };
@@ -102,29 +103,75 @@ TmxLevel.prototype.renderGroup = function(member, n){
    
 }
 
-TmxLevel.prototype.processPlayer = function(){
-    this.p.body.velocity.x = 0;
-    if (this.cursors.up.isDown)
-    {
-        if (this.p.body.onFloor())
-        {
-            this.p.body.velocity.y = -150;
+TmxLevel.prototype.createObjectsFromMap = function(){
+    var objs = this.map.objects.objects;
+    for(var i in objs){
+        //console.log(objs[i].x);
+        switch(objs[i].name){
+            case 'player':
+                console.log('pl' + objs[i].name);
+                //player already exists so just set its position
+                player.x = objs[i].x;
+                player.y = objs[i].y - player.height;
+                break;
+            case 'enemy':
+                console.log('en' + objs[i].gid);
+                this.createEnemiesFromMap(objs[i]);
+                break;
         }
     }
+}
 
-    if (this.cursors.left.isDown)
-    {
-        this.p.body.velocity.x = -75;
-    }
-    else if (this.cursors.right.isDown)
-    {
-        this.p.body.velocity.x = 75;
+TmxLevel.prototype.createEnemiesFromMap = function(en){
+    var newenemy;
+    
+    switch(en.gid){
+        case 197:
+            newenemy = new Enemy(en.x, en.y - 16);
+            break;
+        case 194:
+            console.log("Snail goes here");
+            break;
     }
     
-    //attack
-    if(this.spaceBar.isDown){
+    if(newenemy){
+        this.enemies.add(newenemy);
+    }else{
+        console.log("Invalid enemy: " + en.gid)
     }
-};
+}
+
+TmxLevel.prototype.createItemsFromMap = function(itm){
+    var newitem;
+    
+    switch(itm.gid){
+        case 205:
+            console.log("points item goes here");
+            break;
+    }
+    
+    if(newitem){
+        this.items.add(newitem);
+    }else{
+        console.log("invalid item: " + itm.gid)
+    }
+}
+
+TmxLevel.prototype.createHazardsFromMap = function(hzd){
+    var newhazard;
+    
+    switch(hzd.gid){
+        case 204:
+            console.log("spikes go here");
+            break;
+    }
+    
+    if(newhazard){
+        this.hazards.add(newhazard);
+    }else{
+        console.log("invalid spikes: " + hzd.gid)
+    }
+}
 
 TmxLevel.prototype.createHitBox = function(X, Y, W, H, friendly, lifespan, seek){
     var spr = game.add.sprite(X, Y, 'blanksprite');
@@ -168,3 +215,4 @@ TmxLevel.prototype.onUnfriendlyOverlapWithPlayer = function(plyr, hb){
     console.log("player was hit!")
     hb.destroy();
 }
+

@@ -23,9 +23,11 @@ Player.prototype.update = function(){
 
 Player.prototype.processControls = function(){
     this.body.velocity.x = 0;
+    var onground = this.body.blocked.down || this.body.touching.down;
     if (this.gamestate.cursors.up.isDown)
     {
-        if (this.body.onFloor())
+        if(onground)
+        //if (this.body.onFloor())
         {
             this.body.velocity.y = -150;
         }
@@ -61,5 +63,5 @@ Player.prototype.attack = function(evt){
          hbx = this.x + this.width;
      }
      hby = this.y + (this.height / 2) - this.attackBox.h / 2;
-     this.gamestate.createHitBox(hbx, hby, this.attackBox.w, this.attackBox.h, true, 100);
+     this.gamestate.createHitBox(hbx, hby, this.attackBox.w, this.attackBox.h, true, 50);
 }
