@@ -5,6 +5,9 @@ function Enemy(X, Y){
     //this.y = Y;
     //this.width = W;
     //this.height = H;
+    this.blinkTimer = 6;
+
+
     this.fsm = new FiniteStateMachine();
     game.physics.arcade.enable(this);
     this.body.bounce.y = 0;
@@ -18,6 +21,8 @@ function Enemy(X, Y){
     
     this.dir = 0; // 0 for left, 1 for right.
     this.prevdir = 1;
+
+    this.interruptTime = 10;
     //=====
     //States
     //=====
@@ -130,18 +135,37 @@ function Enemy(X, Y){
    //attack state
    this.state_Attack = new ActorState(this);
    this.state_Attack.onEnter = function(){
-       this.attackTimer = 30;
+       this.attackTimer = 15;
        this.attackCount = 0;
-       this.postAttackTimer = 30;
+       this.postAttackTimer = 15;
        this.postAttackCount = 0;
        this.actor.body.velocity.x = 0;
+       this.interrupt_duration = 5;
+       this.interrupt_immunity = false;
    };
    this.state_Attack.onExit = function(){
        this.attackCount = 0;
    };
    this.state_Attack.update = function(){
-       this.attackCount++;
-       this.postAttackCount++;
+       if((!this.actor.blinking && !this.actor.interrupted) || this.interrupt_immunity ){
+           this.attackCount++;
+           this.postAttackCount++;
+       }
+       //console.log(this.attackCount)
+       if(this.actor.blinking && !this.actor.interrupted){
+           this.actor.interrupted = true;
+       }
+       if(this.actor.interrupted){
+            this.actor.interruptCounter++;
+            if(this.actor.interruptCounter >= this.interrupt_duration){
+                this.interrupt_immunity = true;
+            }
+            if(this.actor.interruptCounter >= this.actor.interruptTime){
+                this.actor.interruptCounter = 0;
+                this.actor.interrupted = false;
+                this.interrupt_immunity = false;
+            } 
+       }
        this.actor.body.velocity.x = 0;
        if(this.attackCount == this.attackTimer){
             var hbx;

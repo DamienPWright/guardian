@@ -48,10 +48,6 @@ Player.prototype.processControls = function(){
     }else if(this.body.velocity.x < 0){
         this.dir = 0;
     }
-    //attack
-    if( this.gamestate.spaceBar.isDown){
-       
-    }
 }
 
 Player.prototype.attack = function(evt){
@@ -65,4 +61,8 @@ Player.prototype.attack = function(evt){
      }
      hby = this.y + (this.height / 2) - this.attackBox.h / 2;
      this.gamestate.createHitBox(hbx, hby, this.attackBox.w, this.attackBox.h, true, 50);
+}
+
+Player.prototype.onDeath = function(){
+    game.state.start('gameover');
 }

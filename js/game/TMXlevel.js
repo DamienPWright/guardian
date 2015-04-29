@@ -17,6 +17,8 @@ function TmxLevel(){
     this.hitboxes_seek;
     this.items;
     
+    //hud
+    this.hud;
 }
 
 TmxLevel.prototype.preload = function() {
@@ -26,11 +28,19 @@ TmxLevel.prototype.preload = function() {
    game.load.spritesheet('playerchar', 'assets/img/sprites/player.png', 14, 16);
    game.load.spritesheet('enemytest', 'assets/img/sprites/enemytest.png', 12, 16);
    game.load.spritesheet('blanksprite', 'assets/img/sprites/blanksprite.png', 1, 1);
+   
+   //hud images
+   game.load.image('hpbar_icon', 'assets/img/hud/hpBarIcon.png');
+   game.load.image('hpbar_container', 'assets/img/hud/hbBarContainer.png');
+   game.load.image('hpbar', 'assets/img/hud/hpBar.png');
+   game.load.image('scoreicon', 'assets/img/hud/scoreIcon.png');
+   game.load.image('timeicon', 'assets/img/hud/timeIcon.png')
 };
 
 TmxLevel.prototype.create = function() {
     
    scoreText = game.add.text(16, 16, 'Level 1', {fontSize: '32px', fill: '#FFF'});
+  
    
    //Physics
    game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -45,7 +55,7 @@ TmxLevel.prototype.create = function() {
    this.map.setCollisionByExclusion([0], true, this.wall_layer);
    this.wall_layer.resizeWorld();
   
-   init();
+   //init();
     //init sprite groups
     this.enemies = game.add.group();
     this.hitboxes_unfriendly = game.add.group();
@@ -64,6 +74,8 @@ TmxLevel.prototype.create = function() {
     //controls
     this.cursors = game.input.keyboard.createCursorKeys();
     this.spaceBar =  game.input.keyboard.addKey(32);
+    
+    this.hud = new HUD();
 };
 
 TmxLevel.prototype.update = function() {
@@ -73,12 +85,13 @@ TmxLevel.prototype.update = function() {
     
     game.physics.arcade.overlap(this.hitboxes_friendly, this.enemies, this.onFriendlyOverlapWithEnemy);
     game.physics.arcade.overlap(this.hitboxes_unfriendly, this.p, this.onUnfriendlyOverlapWithPlayer);
+    this.hud.update();
 };
 
 TmxLevel.prototype.render = function(){
      //debug - due to the scaling it has to be done before pixel.context.drawImage or else it will be drawn underneath!
-    this.hitboxes_friendly.forEachExists(this.renderGroup, this, 0);
-    this.hitboxes_unfriendly.forEachExists(this.renderGroup, this, 1);
+    //this.hitboxes_friendly.forEachExists(this.renderGroup, this, 0);
+    //this.hitboxes_unfriendly.forEachExists(this.renderGroup, this, 1);
     //this.hitboxes_seek.forEachExists(this.renderGroup, this, 2);
     
     pixel.context.drawImage(game.canvas, 0, 0, game.width, game.height, 0, 0, pixel.width, pixel.height);
@@ -209,12 +222,24 @@ TmxLevel.prototype.onHitboxOverlapSprite = function(hb, spr){
 TmxLevel.prototype.onFriendlyOverlapWithEnemy = function(hb, ene){
     console.log("enemy was hit! " + ene);
     hb.destroy();
+    ene.takeDamage();
     ene.blinking = true;
 }
 
 TmxLevel.prototype.onUnfriendlyOverlapWithPlayer = function(plyr, hb){
-    console.log("player was hit!")
+    
     hb.destroy();
-    player.blinking = true;
+    if(!player.blinking){
+        player.takeDamage();
+        player.blinking = true;
+        game.state.getCurrentState().hud.updateLifeBar();
+    }
+    
+}
+
+TmxLevel.prototype.incrementScore = function(pts){
+    if(pts){
+        this.hud.updateScore(pts);
+    }
 }
 
