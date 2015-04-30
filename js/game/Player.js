@@ -12,6 +12,13 @@ function Player(X, Y){
     this.attackTimer;
     
     game.input.keyboard.addKey(32).onDown.add(function(){this.attack()}, this);
+    
+    this.animations.add('idle_left', [3], 10, true);
+    this.animations.add('idle_right', [0], 10, true);
+    this.animations.add('run_left',[3, 4, 3, 5] , 10, true);
+    this.animations.add('run_right', [0, 1, 0, 2], 10, true);
+    this.animations.add('jump_left', [5], 10, true);
+    this.animations.add('jump_right', [2], 10, true);
 }
 
 Player.prototype = Object.create(Actor.prototype);
@@ -20,7 +27,37 @@ Player.prototype.constructor = Player;
 Player.prototype.update = function(){
     this.updateActor();
     this.processControls();
-}
+    this.animations.play(this.updateAnimation());
+};
+
+Player.prototype.updateAnimation = function(){
+    var anim = 'idle_right';
+    var onground = this.body.blocked.down || this.body.touching.down;
+    if(onground)
+    //if (this.body.onFloor())
+    {
+        if(this.body.velocity.x != 0){
+            if(this.dir == 0){
+                anim = 'run_left';
+            }else{
+                anim = 'run_right';
+            }
+        }else{
+            if(this.dir == 0){
+                anim = 'idle_left';
+            }else{
+                anim = 'idle_right';
+            }
+        }
+    }else{
+        if(this.dir == 0){
+            anim = 'jump_left';
+        }else{
+            anim = 'jump_right';
+        }
+    }
+    return anim;
+};
 
 Player.prototype.processControls = function(){
     this.body.velocity.x = 0;
@@ -30,17 +67,19 @@ Player.prototype.processControls = function(){
         if(onground)
         //if (this.body.onFloor())
         {
-            this.body.velocity.y = -150;
+            this.body.velocity.y = -180;
         }
     }
 
     if (this.gamestate.cursors.left.isDown)
     {
         this.body.velocity.x = -75;
+        this.dir = 0;
     }
     else if (this.gamestate.cursors.right.isDown)
     {
         this.body.velocity.x = 75;
+        this.dir = 1;
     }
     //set facing
     if(this.body.velocity.x > 0){

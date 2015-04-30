@@ -25,9 +25,10 @@ TmxLevel.prototype.preload = function() {
    game.load.tilemap('circuitboard', 'assets/tilemap/testmap.json', null, Phaser.Tilemap.TILED_JSON);
    game.load.image('circuitboard_tiles', 'assets/img/tileset/webgametiles.png');
    //sprite images
-   game.load.spritesheet('playerchar', 'assets/img/sprites/player.png', 14, 16);
+   game.load.spritesheet('playerchar', 'assets/img/sprites/player.png', 14, 18);
    game.load.spritesheet('enemytest', 'assets/img/sprites/enemytest.png', 12, 16);
    game.load.spritesheet('blanksprite', 'assets/img/sprites/blanksprite.png', 1, 1);
+   game.load.spritesheet('enemysnail', 'assets/img/sprites/EnemySnail.png', 16, 16);
    
    //hud images
    game.load.image('hpbar_icon', 'assets/img/hud/hpBarIcon.png');
@@ -140,10 +141,11 @@ TmxLevel.prototype.createEnemiesFromMap = function(en){
     
     switch(en.gid){
         case 197:
-            newenemy = new Enemy(en.x, en.y - 16);
+            newenemy = new EnemyMinion(en.x, en.y - 16);
             break;
         case 194:
             console.log("Snail goes here");
+            newenemy = new EnemySnail(en.x, en.y - 16);
             break;
     }
     
