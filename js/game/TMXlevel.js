@@ -16,6 +16,7 @@ function TmxLevel(){
     this.hitboxes_unfriendly;
     this.hitboxes_seek;
     this.items;
+    this.hazards;
     
     //hud
     this.hud;
@@ -36,6 +37,11 @@ TmxLevel.prototype.preload = function() {
    game.load.image('hpbar', 'assets/img/hud/hpBar.png');
    game.load.image('scoreicon', 'assets/img/hud/scoreIcon.png');
    game.load.image('timeicon', 'assets/img/hud/timeIcon.png')
+   
+   //other things
+   game.load.spritesheet('goal', 'assets/img/sprites/goal.png', 32, 24);
+   game.load.image('spikes', 'assets/img/sprites/spikes.png', 32, 32);
+   game.load.spritesheet('stab','assets/img/sprites/stab.png', 16, 8);
 };
 
 TmxLevel.prototype.create = function() {
@@ -69,8 +75,15 @@ TmxLevel.prototype.create = function() {
    this.p = player;
    game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
    
+   //make goal
+   this.goal = new Goal(0, 0);
+   
    //load objects from the map
    this.createObjectsFromMap();
+   
+    game.add.existing(this.goal);
+   
+   
    
     //controls
     this.cursors = game.input.keyboard.createCursorKeys();
@@ -87,6 +100,13 @@ TmxLevel.prototype.update = function() {
     game.physics.arcade.overlap(this.hitboxes_friendly, this.enemies, this.onFriendlyOverlapWithEnemy);
     game.physics.arcade.overlap(this.hitboxes_unfriendly, this.p, this.onUnfriendlyOverlapWithPlayer);
     this.hud.update();
+    if(this.goal.overlap(this.p)){
+        this.onPlayerReachGoal();
+    }
+    if(this.p.y > 440){
+        this.p.y = 0;
+        game.state.start("gameover");
+    }
 };
 
 TmxLevel.prototype.render = function(){
@@ -132,6 +152,19 @@ TmxLevel.prototype.createObjectsFromMap = function(){
                 console.log('en' + objs[i].gid);
                 this.createEnemiesFromMap(objs[i]);
                 break;
+            case 'spikes':
+                console.log('place spikes');
+                this.createHazardsFromMap(objs[i]);
+                break;
+            case 'item':
+                console.log('place item');
+                this.createItemsFromMap(objs[i]);
+                break;
+            case 'goal':
+                console.log(this.goal);
+                this.goal.x = objs[i].x;
+                this.goal.y = objs[i].y - 24;
+                break;
         }
     }
 }
@@ -144,7 +177,6 @@ TmxLevel.prototype.createEnemiesFromMap = function(en){
             newenemy = new EnemyMinion(en.x, en.y - 16);
             break;
         case 194:
-            console.log("Snail goes here");
             newenemy = new EnemySnail(en.x, en.y - 16);
             break;
     }
@@ -237,6 +269,10 @@ TmxLevel.prototype.onUnfriendlyOverlapWithPlayer = function(plyr, hb){
         game.state.getCurrentState().hud.updateLifeBar();
     }
     
+}
+
+TmxLevel.prototype.onPlayerReachGoal = function(){
+    game.state.start("gameclear");
 }
 
 TmxLevel.prototype.incrementScore = function(pts){

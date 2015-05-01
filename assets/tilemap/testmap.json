@@ -156,10 +156,10 @@
                  "y":256
                 }, 
                 {
-                 "gid":204,
+                 "gid":206,
                  "height":0,
-                 "id":9,
-                 "name":"hazard",
+                 "id":13,
+                 "name":"goal",
                  "properties":
                     {
 
@@ -168,14 +168,110 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":96,
+                 "x":2304,
+                 "y":352
+                }, 
+                {
+                 "gid":194,
+                 "height":0,
+                 "id":14,
+                 "name":"enemy",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1888,
+                 "y":192
+                }, 
+                {
+                 "gid":194,
+                 "height":0,
+                 "id":15,
+                 "name":"enemy",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":832,
+                 "y":288
+                }, 
+                {
+                 "gid":194,
+                 "height":0,
+                 "id":16,
+                 "name":"enemy",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1088,
+                 "y":288
+                }, 
+                {
+                 "gid":197,
+                 "height":0,
+                 "id":17,
+                 "name":"enemy",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1248,
+                 "y":256
+                }, 
+                {
+                 "gid":197,
+                 "height":0,
+                 "id":18,
+                 "name":"enemy",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2176,
+                 "y":352
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":19,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":576,
                  "y":320
                 }, 
                 {
                  "gid":204,
                  "height":0,
-                 "id":10,
-                 "name":"hazard",
+                 "id":20,
+                 "name":"spikes",
                  "properties":
                     {
 
@@ -184,8 +280,152 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":128,
-                 "y":320
+                 "x":928,
+                 "y":288
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":21,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":960,
+                 "y":288
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":22,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1056,
+                 "y":288
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":23,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1088,
+                 "y":288
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":24,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1792,
+                 "y":192
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":25,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1824,
+                 "y":192
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":26,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1856,
+                 "y":192
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":27,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1888,
+                 "y":192
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":28,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1920,
+                 "y":192
+                }, 
+                {
+                 "gid":204,
+                 "height":0,
+                 "id":29,
+                 "name":"spikes",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1952,
+                 "y":192
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -194,7 +434,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":13,
+ "nextobjectid":30,
  "orientation":"orthogonal",
  "properties":
     {

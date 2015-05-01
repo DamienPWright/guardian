@@ -13,10 +13,12 @@
 	<script type="text/javascript" src="js/game/EnemyMinion.js"></script>
 	<script type="text/javascript" src="js/game/EnemySnail.js"></script>
 	<script type="text/javascript" src="js/game/EnemyWasp.js"></script>
+	<script type="text/javascript" src="js/game/stab.js"></script>
 	<script type="text/javascript" src="js/game/Goal.js"></script>
 	<script type="text/javascript" src="js/game/HitBox.js"></script>
 	<script type="text/javascript" src="js/game/title.js"></script>
 	<script type="text/javascript" src="js/game/gameover.js"></script>
+	<script type="text/javascript" src="js/game/gameclear.js"></script>
 	<script type="text/javascript" src="js/game/hud.js"></script>
     <style type="text/css">
         body {
@@ -35,6 +37,7 @@
         game.state.add("title", TitleScreen);
         game.state.add("tmxlevel", TmxLevel);
         game.state.add('gameover', GameOver);
+        game.state.add('gameclear', GameClear);
         game.state.start('title', TitleScreen)
     }
     

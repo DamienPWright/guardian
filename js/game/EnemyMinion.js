@@ -142,6 +142,7 @@ function EnemyMinion(X, Y){
        this.actor.body.velocity.x = 0;
        this.interrupt_duration = 5;
        this.interrupt_immunity = false;
+       this.stabeffect;
    };
    this.state_Attack.onExit = function(){
        this.attackCount = 0;
@@ -172,11 +173,15 @@ function EnemyMinion(X, Y){
             var hby;
             if(this.actor.dir == 0){
                 hbx = this.actor.x - 12;
+                this.stabeffect = new Stab(this.actor.x - this.actor.width, this.actor.y + (this.actor.height / 2), this.actor.dir);
             }else{
                 hbx = this.actor.x + 12;
+                this.stabeffect = new Stab(this.actor.x + this.actor.width,this.actor.y + (this.actor.height / 2), this.actor.dir);
             }
             hby = this.actor.y + (this.actor.height / 2) - 4;
+            
            game.state.getCurrentState().createHitBox(hbx, hby, 16, 8, false, 50);
+           game.add.existing(this.stabeffect);
             console.log("attacked. " + hbx + " " + hby);
        }
        if(this.postAttackCount >= (this.attackTimer + this.postAttackTimer)){

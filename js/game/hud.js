@@ -9,7 +9,7 @@ function HUD(){
     this.scoreIconY = 0;
     this.scoreTextX = this.scoreIconX + 12;
     this.scoreTextY = this.scoreIconY - 1;
-    this.timeIconX = 150;
+    this.timeIconX = 10;
     this.timeIconY = 138;
     this.timeTextX = this.timeIconX + 12;
     this.timeTextY = this.timeIconY - 1;

@@ -93,10 +93,16 @@ Player.prototype.attack = function(evt){
      //create hitbox depending on facing.
      var hbx;
      var hby;
+     var stabeffect;
      if(this.dir == 0){
          hbx = this.x - this.attackBox.w;
+         stabeffect = new Stab(player.x - player.width, player.y + (player.height / 2), this.dir);
      }else{
          hbx = this.x + this.width;
+         stabeffect = new Stab(player.x + player.width, player.y + (player.height / 2), this.dir);
+     }
+     if(stabeffect){
+         game.add.existing(stabeffect);
      }
      hby = this.y + (this.height / 2) - this.attackBox.h / 2;
      this.gamestate.createHitBox(hbx, hby, this.attackBox.w, this.attackBox.h, true, 50);

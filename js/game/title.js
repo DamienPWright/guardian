@@ -24,7 +24,7 @@ TitleScreen.prototype.create = function(){
     this.enterKey =  game.input.keyboard.addKey(13);
     
     game.add.text(16, 16, 'GUARDIAN', {font: '16px Arial', fill: '#FFF'});
-    game.add.text(this.selPosX, this.selPosY[0], 'Empty Level', {font: '10px Arial', fill: '#FFF'});
+    game.add.text(this.selPosX, this.selPosY[0], 'Start Game', {font: '10px Arial', fill: '#FFF'});
     game.add.text(this.selPosX, this.selPosY[1], 'High Scores (not implemented)', {font: '10px Arial', fill: '#FFF'});
     game.add.text(this.selPosX, this.selPosY[2], 'Test Menu (not implemented)', {font: '10px Arial', fill: '#FFF'});
     
